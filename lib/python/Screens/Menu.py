@@ -13,6 +13,12 @@ from Tools.BoundFunction import boundFunction
 from Plugins.Plugin import PluginDescriptor
 from Tools.Directories import resolveFilename, SCOPE_SKIN
 from enigma import eTimer
+from Components.Pixmap import Pixmap, MovingPixmap
+from Components.Button import Button
+from Tools.LoadPixmap import LoadPixmap
+import os
+import six
+from skin import findSkinScreen
 
 import xml.etree.cElementTree
 
@@ -85,9 +91,12 @@ class Menu(Screen, ProtectedScreen):
 					return
 			elif not SystemInfo.get(requires, False):
 				return
-		MenuTitle = _(node.get("text", "??").encode("UTF-8"))
+		MenuTitle = _(six.ensure_str(node.get("text", "??")))
 		entryID = node.get("entryID", "undefined")
 		weight = node.get("weight", 50)
+		description = six.ensure_str(node.get("description", "")) or None
+		description = description and _(description)
+		menupng = MenuEntryPixmap(entryID, self.png_cache, lastMenuID)
 		x = node.get("flushConfigOnClose")
 		if x:
 			a = boundFunction(self.session.openWithCallback, self.menuClosedWithConfigFlush, Menu, node)
@@ -119,9 +128,12 @@ class Menu(Screen, ProtectedScreen):
 		conditional = node.get("conditional")
 		if conditional and not eval(conditional):
 			return
-		item_text = node.get("text", "").encode("UTF-8")
+		item_text = six.ensure_str(node.get("text", ""))
 		entryID = node.get("entryID", "undefined")
 		weight = node.get("weight", 50)
+		description = six.ensure_str(node.get("description", "")) or ''
+		description = description and _(description)
+		menupng = MenuEntryPixmap(entryID, self.png_cache, lastMenuID)
 		for x in node:
 			if x.tag == 'screen':
 				module = x.get("module")
@@ -243,7 +255,10 @@ class Menu(Screen, ProtectedScreen):
 				if menuupdater.updatedMenuAvailable(self.menuID):
 					for x in menuupdater.getUpdatedMenu(self.menuID):
 						if x[1] == count:
-							self.list.append((x[0], boundFunction(self.runScreen, (x[2], x[3] + ", ")), x[4]))
+							description = six.ensure_str(x.get("description", "")) or None
+							description = description and _(description)
+							menupng = MenuEntryPixmap(menuID, self.png_cache, lastMenuID)
+							m_list.append((x[0], boundFunction(self.runScreen, (x[2], x[3] + ", ")), x[4], description, menupng))
 							count += 1
 		if self.menuID:
 			# plugins

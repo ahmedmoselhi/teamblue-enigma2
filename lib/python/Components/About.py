@@ -233,8 +233,12 @@ def getDriverInstalledDate():
 
 def getPythonVersionString():
 	try:
-		import subprocess
-		status, output = subprocess.getstatusoutput("python -V")
+		if version_info[0] >= 3:
+			import subprocess
+			status, output = subprocess.getstatusoutput("python3 -V")
+		else:
+			import commands
+			status, output = commands.getstatusoutput("python -V")
 		return output.split(' ')[1]
 	except:
 		return _("unknown")

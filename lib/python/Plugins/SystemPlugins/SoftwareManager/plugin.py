@@ -1512,7 +1512,7 @@ class UpdatePlugin(Screen):
 			return
 
 	#def checkTraficLight(self):
-	#	from urllib import urlopen
+	#	from six.moves.urllib.request import urlopen
 	#	import socket
 	#	currentTimeoutDefault = socket.getdefaulttimeout()
 	#	socket.setdefaulttimeout(3)
@@ -1520,8 +1520,8 @@ class UpdatePlugin(Screen):
 	#	picon = None
 	#	default = True
 	#	doUpdate = True
-		# TODO: Use Twisted's URL fetcher, urlopen is evil. And it can
-		# run in parallel to the package update.
+	#	# TODO: Use Twisted's URL fetcher, urlopen is evil. And it can
+	#	# run in parallel to the package update.
 	#	try:
 	#		urlopenSTATUS = "http://status.teamblue.tech/index.php"
 	#		d = urlopen(urlopenSTATUS)
@@ -1651,7 +1651,7 @@ class UpdatePlugin(Screen):
 				if self.updating:
 					error = _("Your Receiver isn't connected to the internet properly. Please check it and try again.")
 				self.status.setText(_("Error") +  " - " + error)
-		#print event, "-", param
+		#print(event, "-", param)
 		pass
 
 	def startActualUpgrade(self, answer):

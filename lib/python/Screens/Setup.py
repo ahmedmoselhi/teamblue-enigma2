@@ -10,17 +10,19 @@ from Components.Sources.Boolean import Boolean
 from enigma import eEnv
 
 import xml.etree.cElementTree
+import six
 
-# FIXME: use resolveFile!
-# read the setupmenu
-try:
-	# first we search in the current path
-	setupfile = open('data/setup.xml', 'r')
-except:
-	# if not found in the current path, we use the global datadir-path
-	setupfile = open(eEnv.resolve('${datadir}/enigma2/setup.xml'), 'r')
-setupdom = xml.etree.cElementTree.parse(setupfile)
-setupfile.close()
+def setupdom(plugin=None):
+	# read the setupmenu
+	if plugin:
+		# first we search in the current path
+		setupfile = file(resolveFilename(SCOPE_CURRENT_PLUGIN, plugin + '/setup.xml'), 'r')
+	else:
+		# if not found in the current path, we use the global datadir-path
+		setupfile = open(eEnv.resolve('${datadir}/enigma2/setup.xml'), 'r')
+	setupfiledom = xml.etree.cElementTree.parse(setupfile)
+	setupfile.close()
+	return setupfiledom
 
 def getConfigMenuItem(configElement):
 	for item in setupdom.getroot().findall('./setup/item/.'):
@@ -81,7 +83,7 @@ class Setup(ConfigListScreen, Screen):
 			if x.get("key") != self.setup:
 				continue
 			self.addItems(list, x)
-			self.setup_title = x.get("title", "").encode("UTF-8")
+			self.setup_title = six.ensure_str(x.get("title", ""))
 			self.seperation = int(x.get('separation', '0'))
 
 	def __init__(self, session, setup):
@@ -171,8 +173,15 @@ class Setup(ConfigListScreen, Screen):
 				if conditional and not eval(conditional):
 					continue
 
-				item_text = _(x.get("text", "??").encode("UTF-8"))
-				item_description = _(x.get("description", " ").encode("UTF-8")) # don't change
+				if self.PluginLanguageDomain:
+					item_text = dgettext(self.PluginLanguageDomain, six.ensure_str(x.get("text", "??")))
+					item_description = dgettext(self.PluginLanguageDomain, six.ensure_str(x.get("description", " ")))
+				else:
+					item_text = _(six.ensure_str(x.get("text", "??")))
+					item_description = _(six.ensure_str(x.get("description", " ")))
+
+				item_text = item_text.replace("%s %s", "%s %s" % (getMachineBrand(), getMachineName()))
+				item_description = item_description.replace("%s %s", "%s %s" % (getMachineBrand(), getMachineName()))
 				b = eval(x.text or "")
 				if b == "":
 					continue
@@ -190,7 +199,9 @@ def getSetupTitle(id):
 	xmldata = setupdom.getroot()
 	for x in xmldata.findall("setup"):
 		if x.get("key") == id:
-			return x.get("title", "").encode("UTF-8")
+			if _(six.ensure_str(x.get("title", ""))) == _("OSD Settings") or _(six.ensure_str(x.get("title", ""))) == _("Softcam Setup") or _(six.ensure_str(x.get("title", ""))) == _("EPG settings"):
+				return _("Settings...")
+			return six.ensure_str(x.get("title", ""))
 	raise SetupError("unknown setup id '%s'!" % repr(id))
 
 def getSetupTitleLevel(id):

@@ -27,7 +27,6 @@ from enigma import eTimer, eLabel, eConsoleAppContainer, getDesktop
 from Components.GUIComponent import GUIComponent
 import skin, os
 
-
 class About(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -134,7 +133,7 @@ class About(Screen):
 		AboutText += _("Enigma (re)starts: %d\n") % config.misc.startCounter.value
 
 		fp_version = getFPVersion()
-		if fp_version is None:
+		if fp_version == None:
 			fp_version = ""
 		else:
 			fp_version = _("Frontprocessor version: %s") % fp_version
@@ -504,7 +503,7 @@ class MemoryInfoSkinParams(GUIComponent):
 		self.rows_in_column = 25
 
 	def applySkin(self, desktop, screen):
-		if self.skinAttributes is not None:
+		if self.skinAttributes != None:
 			attribs = [ ]
 			for (attrib, value) in self.skinAttributes:
 				if attrib == "rowsincolumn":
@@ -708,8 +707,8 @@ class SystemNetworkInfo(Screen):
 		#self.AboutText += "\n" + _("Bytes received:") + "\t" + rx_bytes + '  (~'  + str(int(rx_bytes)/1024/1024)  + ' MB)'  + "\n"
 		#self.AboutText += _("Bytes sent:") + "\t" + tx_bytes + '  (~'  + str(int(tx_bytes)/1024/1024)+ ' MB)'  + "\n"
 
-		hostname = file('/proc/sys/kernel/hostname').read()
-		self.AboutText += _("Hostname:") + hostname + "\n"
+		hostname = open('/proc/sys/kernel/hostname').read()
+		self.AboutText += "\n" + '{:<35}'.format(_("Hostname:")) + "\t" + hostname + "\n"
 		self["AboutScrollLabel"] = ScrollLabel(self.AboutText)
 
 	def cleanup(self):
@@ -722,9 +721,9 @@ class SystemNetworkInfo(Screen):
 
 	def getInfoCB(self, data, status):
 		self.LinkState = None
-		if data is not None:
-			if data is True:
-				if status is not None:
+		if data != None:
+			if data == True:
+				if status != None:
 					if self.iface == 'wlan0' or self.iface == 'ra0':
 						if status[self.iface]["essid"] == "off":
 							essid = _("No Connection")
@@ -765,7 +764,7 @@ class SystemNetworkInfo(Screen):
 						if "enc" in self:
 							self.AboutText += _('Encryption:') + encryption + '\n'
 
-						if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] is False:
+						if status[self.iface]["essid"] == "off" or status[self.iface]["accesspoint"] == "Not-Associated" or status[self.iface]["accesspoint"] == False:
 							self.LinkState = False
 						else:
 							self.LinkState = True

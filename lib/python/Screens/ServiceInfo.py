@@ -1,6 +1,8 @@
-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+from __future__ import print_function
 from Components.GUIComponent import GUIComponent
-from .Screen import Screen
+from Screens.Screen import Screen
 from Screens.AudioSelection import AudioSelection
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -22,8 +24,7 @@ TYPE_VALUE_BITRATE = 8
 def to_unsigned(x):
 	return x & 0xFFFFFFFF
 
-def ServiceInfoListEntry(a, b="", valueType=TYPE_TEXT, param=4, altColor=False):
-	print("b:", b)
+def ServiceInfoListEntry(a, b, valueType=TYPE_TEXT, param=4):
 	if not isinstance(b, str):
 		if valueType == TYPE_VALUE_HEX:
 			b = ("%0" + str(param) + "X") % to_unsigned(b)
@@ -43,16 +44,16 @@ def ServiceInfoListEntry(a, b="", valueType=TYPE_TEXT, param=4, altColor=False):
 			b = ("%d.%d%s") % (b // 10, b % 10, direction)
 		else:
 			b = str(b)
-	xa, ya, wa, ha = skin.parameters.get("ServiceInfoLeft", (0, 0, 300, 25))
-	xb, yb, wb, hb = skin.parameters.get("ServiceInfoRight", (300, 0, 600, 25))
-	color = skin.parameters.get("ServiceInfoAltColor", (0x00FFBF00)) # alternative foreground color
-	res = [ None ]
-	if b:
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa, ha, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, a))
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xb, yb, wb, hb, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, b))
-	else:
-		res.append((eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa + wb, ha, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, a, color if altColor is True else None)) # spread horizontally
-	return res
+
+	x, y, w, h = skin.parameters.get("ServiceInfo",(0, 0, 300, 30))
+	xa, ya, wa, ha = skin.parameters.get("ServiceInfoLeft",(0, 0, 300, 25))
+	xb, yb, wb, hb = skin.parameters.get("ServiceInfoRight",(300, 0, 600, 25))
+	return [
+		#PyObject *type, *px, *py, *pwidth, *pheight, *pfnt, *pstring, *pflags;
+		(eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT, ""),
+		(eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa, ha, 0, RT_HALIGN_LEFT, a),
+		(eListboxPythonMultiContent.TYPE_TEXT, xb, yb, wb, hb, 0, RT_HALIGN_LEFT, b)
+	]
 
 class ServiceInfoList(GUIComponent):
 	def __init__(self, source):
@@ -231,12 +232,17 @@ class ServiceInfo(Screen):
 		return trackList
 
 	def togglePIDButton(self):
-		if (self["key_yellow"].text == _("Service & PIDs") or self["key_yellow"].text == _("Basic PID info")) and (self.numberofTracks > 1 or self.subList):
-			self.showAll = False
-			self["key_yellow"].text = self["yellow"].text = _("Extended PID info")
-			self["Title"].text = _("Service info - service & Basic PID Info")
-		elif (self.numberofTracks < 2) and not self.subList:
-			self.showAll = False
+		if self.numberofTracks:
+			if (self["key_yellow"].text == _("Service & PIDs") or self["key_yellow"].text == _("Basic PID info")) and (self.numberofTracks > 1 or self.subList):
+				self.showAll = False
+				self["key_yellow"].text = self["yellow"].text = _("Extended PID info")
+				self["Title"].text = _("Service info - service & Basic PID Info")
+			elif (self.numberofTracks < 2) and not self.subList:
+				self.showAll = False
+			else:
+				self.showAll = True
+				self["key_yellow"].text = self["yellow"].text = _("Basic PID info")
+				self["Title"].text = _("Service info - service & Extended PID Info")
 		else:
 			self.showAll = True
 			self["key_yellow"].text = self["yellow"].text = _("Basic PID info")

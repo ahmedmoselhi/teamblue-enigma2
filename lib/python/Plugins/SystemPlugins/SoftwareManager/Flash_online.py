@@ -21,7 +21,8 @@ from Components.Console import Console
 from Tools.BoundFunction import boundFunction
 from Tools.Multiboot import GetImagelist, GetCurrentImage, GetCurrentImageMode, GetBoxName
 from enigma import eTimer, fbClass
-import os, urllib.request, urllib.error, urllib.parse, json, shutil, math, time, zipfile, shutil
+import os, json, shutil, math, time, zipfile, shutil
+from six.moves.urllib.request import urlopen
 
 
 from boxbranding import getImageDistro, getMachineBrand, getMachineName, getMachineMtdRoot, getMachineMtdKernel
@@ -96,6 +97,7 @@ class FlashOnline(Screen):
 			if not self.jsonlist:
 				try:
 					self.jsonlist = dict(json.load(urllib.request.urlopen('%s/%s' % (feedurl, box))))
+					self.jsonlist = dict(json.load(urlopen('%s/%s' % (feedurl, box))))
 				except:
 					pass
 			self.imagesList = dict(self.jsonlist)
