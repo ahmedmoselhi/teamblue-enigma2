@@ -1,4 +1,5 @@
 import os
+import enigma
 
 class CamControl:
 	'''CAM convention is that a softlink named /etc/init.c/softcam.* points
