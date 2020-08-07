@@ -1,6 +1,7 @@
+from __future__ import absolute_import, division
 
-from .Screen import Screen
-from . import ChannelSelection
+from Screens.Screen import Screen
+import Screens.ChannelSelection
 import Screens.InfoBar
 from Components.config import config, ConfigClock
 from Components.Pixmap import Pixmap
@@ -14,10 +15,10 @@ from Components.Sources.Event import Event
 from Screens.ChoiceBox import ChoiceBox
 from Screens.TimerEdit import TimerSanityConflict, TimerEditList
 from Screens.EventView import EventViewSimple
-from .TimeDateInput import TimeDateInput
+from Screens.TimeDateInput import TimeDateInput
 from enigma import eServiceReference
 from RecordTimer import RecordTimerEntry, parseEvent, AFTEREVENT, createRecordTimerEntry
-from .TimerEntry import TimerEntry
+from Screens.TimerEntry import TimerEntry
 from ServiceReference import ServiceReference
 from time import localtime, time
 from Components.PluginComponent import plugins
