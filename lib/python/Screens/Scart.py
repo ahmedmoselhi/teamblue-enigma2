@@ -1,5 +1,5 @@
 
-from .Screen import Screen
+from Screens.Screen import Screen
 from .MessageBox import MessageBox
 from Components.AVSwitch import AVSwitch
 from Tools import Notifications

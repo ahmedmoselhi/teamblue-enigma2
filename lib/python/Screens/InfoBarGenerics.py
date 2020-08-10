@@ -19,7 +19,7 @@ from Components.Sources.StaticText import StaticText
 from .EpgSelection import EPGSelection
 from Plugins.Plugin import PluginDescriptor
 
-from .Screen import Screen
+from Screens.Screen import Screen
 from Screens.ScreenSaver import InfoBarScreenSaver
 from Screens import Standby
 from Screens.ChoiceBox import ChoiceBox
