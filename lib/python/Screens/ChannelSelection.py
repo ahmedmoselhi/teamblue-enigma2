@@ -1,4 +1,6 @@
-
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 from Tools.Profile import profile
 
 from Screens.Screen import Screen

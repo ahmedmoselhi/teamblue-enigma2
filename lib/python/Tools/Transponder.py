@@ -1,13 +1,17 @@
+﻿#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import division
 from builtins import str
-from past.utils import old_div
+
 from enigma import eDVBFrontendParametersSatellite, eDVBFrontendParametersCable, eDVBFrontendParametersTerrestrial, eDVBFrontendParametersATSC
 from Components.NimManager import nimmanager
 from Components.config import config
+import six
 
+SIGN = '°' if six.PY3 else str('\xc2\xb0')
 def orbpos(pos):
-	return pos > 3600 and "N/A" or "%d.%d\xc2\xb0%s" % (pos > 1800 and (old_div((3600 - pos), 10), (3600 - pos) % 10, "W") or (old_div(pos, 10), pos % 10, "E"))
+	return pos > 3600 and "N/A" or "%d.%d%s%s" % (pos > 1800 and ((3600 - pos) / 10, (3600 - pos) % 10, SIGN, "W") or (pos / 10, pos % 10, SIGN, "E"))
 
 def getTunerDescription(nim):
 	try:
@@ -22,7 +26,7 @@ def getTunerDescription(nim):
 	return ""
 
 def getMHz(frequency):
-	return old_div((frequency+50000),100000)/10.
+	return (frequency+50000)/100000/10.
 
 # Note: newly added region add into ImportChannels to getTerrestrialRegion()
 #	due using for fallback tuner too
@@ -38,22 +42,24 @@ def getChannelNumber(frequency, nim):
 		if "Europe" in descr:
 			if 174 < f < 230: 	# III
 				d = (f + 1) % 7
-				return str(old_div(int(f - 174),7) + 5) + (d < 3 and "-" or d > 4 and "+" or "")
+				return str(int(f - 174)/7 + 5) + (d < 3 and "-" or d > 4 and "+" or "")
 			elif 470 <= f < 863: 	# IV,V
 				d = (f + 2) % 8
-				return str(old_div(int(f - 470), 8) + 21) + (d < 3.5 and "-" or d > 4.5 and "+" or "")
+				return str(int(f - 470) / 8 + 21) + (d < 3.5 and "-" or d > 4.5 and "+" or "")
+		elif "Zealand" in descr and 506 <= f <= 700:
+			return str(int(f - 506) / 8 + 25)
 		elif "Australia" in descr:
 			d = (f + 1) % 7
 			ds = (d < 3 and "-" or d > 4 and "+" or "")
 			if 174 < f < 202: 	# CH6-CH9
-				return str(old_div(int(f - 174),7) + 6) + ds
+				return str(int(f - 174)/7 + 6) + ds
 			elif 202 <= f < 209: 	# CH9A
 				return "9A" + ds
 			elif 209 <= f < 230: 	# CH10-CH12
-				return str(old_div(int(f - 209),7) + 10) + ds
+				return str(int(f - 209)/7 + 10) + ds
 			elif 526 < f < 820: 	# CH28-CH69
 				d = (f - 1) % 7
-				return str(old_div(int(f - 526),7) + 28) + (d < 3 and "-" or d > 4 and "+" or "")
+				return str(int(f - 526)/7 + 28) + (d < 3 and "-" or d > 4 and "+" or "")
 	return ""
 
 def supportedChannels(nim):
@@ -67,7 +73,19 @@ def channel2frequency(channel, nim):
 			return (177500 + 7000*(channel- 5))*1000
 		elif 21 <= channel <= 69:
 			return (474000 + 8000*(channel-21))*1000
-	return 474000000
+	elif "Zealand" in descr and 25 <= channel <= 50:
+			return (506000 + 8000 * (int(channel) - 25)) * 1000
+	else:	# Australian rules
+		res = 474000000
+		if channel != "9A":
+			ch = int(channel)
+			if 6 <= ch <= 9:
+				res = (177500 + 7000 * (ch - 6)) * 1000
+			elif 10 <= ch <= 12:
+				res = (212500 + 7000 * (ch - 10)) * 1000
+			elif 28 <= ch <= 69:
+				res = (529500 + 7000 * (ch - 28)) * 1000
+		return res
 
 def ConvertToHumanReadable(tp, type = None):
 	ret = { }
