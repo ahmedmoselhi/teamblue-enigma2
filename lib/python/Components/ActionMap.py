@@ -5,7 +5,7 @@ from Tools.KeyBindings import queryKeyBinding
 
 
 class ActionMap:
-	def __init__(self, contexts = [ ], actions = { }, prio=0):
+	def __init__(self, contexts=None, actions=None, prio=0):
 		self.contexts = contexts or []
 		self.actions = actions or {}
 		self.prio = prio
@@ -14,7 +14,7 @@ class ActionMap:
 		self.exec_active = False
 		self.enabled = True
 		unknown = list(self.actions.keys())
-		for action in unknown[:]:
+		for action in unknown:
 			for context in self.contexts:
 				if queryKeyBinding(context, action):
 					unknown.remove(action)
@@ -91,7 +91,7 @@ class HelpableActionMap(ActionMap):
 	# ActionMapconstructor,	the collected helpstrings (with correct
 	# context, action) is added to the screen's "helpList", which will
 	# be picked up by the "HelpableScreen".
-	def __init__(self, parent, contexts, actions={ }, prio=0, description=None):
+	def __init__(self, parent, contexts, actions=None, prio=0, description=None):
 		def exists(record):
 			for context in parent.helpList:
 				if record in context[2]:
@@ -120,11 +120,10 @@ class HelpableActionMap(ActionMap):
 							alist.append((action, None))
 					adict[action] = funchelp
 			parent.helpList.append((self, context, alist))
-		ActionMap.__init__(self, [contexts], adict, prio)
-
+		ActionMap.__init__(self, contexts, adict, prio)
 
 class HelpableNumberActionMap(NumberActionMap, HelpableActionMap):
-	def __init__(self, parent, contexts, actions = { }, prio=0, description=None):
+	def __init__(self, parent, contexts, actions=None, prio=0, description=None):
 		# Initialise NumberActionMap with empty context and actions
 		# so that the underlying ActionMap is only initialised with
 		# these once, via the HelpableActionMap.
