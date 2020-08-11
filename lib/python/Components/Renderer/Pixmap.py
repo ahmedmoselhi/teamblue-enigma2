@@ -1,4 +1,4 @@
-from Components.Renderer import Renderer
+from Components.Renderer.Renderer import Renderer
 
 from enigma import ePixmap
 
