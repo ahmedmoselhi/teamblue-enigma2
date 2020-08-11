@@ -2,11 +2,8 @@
 import sys, os
 from xml.etree.ElementTree import ElementTree, Element
 
-import six
-
-
 root = Element("index")
-encoding = ("six.text_type" if sys.version_info[0] >= 3 else "utf-8")
+encoding = ("unicode" if sys.version_info[0] >= 3 else "utf-8")
 
 for file in sys.argv[1:]:
 	p = ElementTree()
