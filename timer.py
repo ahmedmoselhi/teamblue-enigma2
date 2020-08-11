@@ -202,12 +202,12 @@ class Timer:
 #
 #			for rec in lst:
 #				if rec.start(True): #simulate
-#					print "FAILED!!!!!!!!!!!!"
+#					print("FAILED!!!!!!!!!!!!")
 #				else:
-#					print "OK!!!!!!!!!!!!!!"
+#					print("OK!!!!!!!!!!!!!!")
 #				NavigationInstance.instance.stopRecordService(rec)
 #		else:
-#			print "no NAV"
+#			print("no NAV")
 
 	def setNextActivation(self, now, when):
 		delay = int((when - now) * 1000)

@@ -3,10 +3,10 @@ import struct, socket, fcntl, re, sys, os, time
 from sys import modules
 from Tools.HardwareInfo import HardwareInfo
 
-from boxbranding import getBoxType, getMachineBuild
+from boxbranding import getBoxType, getMachineBuild, getImageVersion
 
 def getVersionString():
-	return getImageVersionString()
+	return getImageVersion()
 
 def getImageVersionString():
 	try:

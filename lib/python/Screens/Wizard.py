@@ -82,7 +82,7 @@ class Wizard(Screen):
 						self.wizard[self.lastStep]["dynamiclist"] = attrs.get("source")
 					#self.wizard[self.lastStep]["list"].append(("Hallo", "test"))
 				if "evaluation" in attrs:
-					#print "evaluation"
+					#print("evaluation")
 					self.wizard[self.lastStep]["listevaluation"] = attrs.get("evaluation")
 				if "onselect" in attrs:
 					self.wizard[self.lastStep]["onselect"] = attrs.get("onselect")
@@ -99,7 +99,7 @@ class Wizard(Screen):
 
 					self.wizard[self.lastStep]["config"]["screen"] = eval(str(attrs.get('screen')))
 					if 'args' in attrs:
-						#print "has args"
+						#print("has args")
 						self.wizard[self.lastStep]["config"]["args"] = str(attrs.get('args'))
 				elif type == "dynamic":
 					self.wizard[self.lastStep]["config"]["source"] = str(attrs.get('source'))

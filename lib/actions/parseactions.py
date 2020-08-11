@@ -16,7 +16,7 @@ def filter(g):
 			continue
 
 		if t[1] != "\n":
-#			print t
+#			print(t)
 			yield t[1]
 
 def do_file(f, mode):

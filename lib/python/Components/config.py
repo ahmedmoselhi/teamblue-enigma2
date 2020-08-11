@@ -2056,7 +2056,7 @@ def updateConfigElement(element, newelement):
 #
 # #configfile.save()
 # config.save()
-# print config.pickle()
+# print(config.pickle())
 
 
 cec_limits = [(0, 15), (0, 15), (0, 15), (0, 15)]

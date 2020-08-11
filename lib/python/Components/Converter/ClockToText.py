@@ -69,7 +69,7 @@ class ClockToText(Converter, object):
 			if "Proportional" in self.fix and t.tm_hour < 10:
 				return " " + string
 			if "NoSpace" in self.fix:
-				return string.lstrip(' ')
+				return ' '.lstrip()
 			return string
 
 		# handle durations

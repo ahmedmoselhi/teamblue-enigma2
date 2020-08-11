@@ -178,12 +178,12 @@ class GBAspectRatioSwitch(object):
 def autostart(reason, **kwargs):
 	global aspect_ratio_switch
 	if reason == 0: # startup
-		#print "GBAspectRatioSwitch: startup"
+		#print("GBAspectRatioSwitch: startup")
 		if config.plugins.GBAspectRatioSwitch.enabled.value and aspect_ratio_switch is None:
 			aspect_ratio_switch = GBAspectRatioSwitch()
 			aspect_ratio_switch.enable()
 	elif reason == 1:
-		#print "GBAspectRatioSwitch: shutdown"
+		#print("GBAspectRatioSwitch: shutdown")
 		if aspect_ratio_switch is not None:
 			aspect_ratio_switch.disable()
 

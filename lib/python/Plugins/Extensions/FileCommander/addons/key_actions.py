@@ -761,6 +761,6 @@ class key_actions(stat_info):
 
 	def onFileActionCB(self, result):
 		# os.system('echo %s > /tmp/test.log' % (result))
-		# print result
+		# print(result)
 		self.SOURCELIST.refresh()
 		self.TARGETLIST.refresh()

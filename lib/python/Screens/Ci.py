@@ -470,7 +470,7 @@ class CiSelection(Screen):
 		else:
 			state = eDVBCI_UI.getInstance().getState(slot)
 			if self.state[slot] != state:
-				#print "something happens"
+				#print("something happens")
 				self.state[slot] = state
 				self.updateState(slot)
 

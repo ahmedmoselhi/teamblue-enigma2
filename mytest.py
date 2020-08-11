@@ -77,7 +77,7 @@ def setEPGCachePath(configElement):
 
 #demo code for use of standby enter leave callbacks
 #def leaveStandby():
-#	print "!!!!!!!!!!!!!!!!!leave standby"
+#	print("!!!!!!!!!!!!!!!!!leave standby")
 
 #def standbyCountChanged(configElement):
 #	print "!!!!!!!!!!!!!!!!!enter standby num", configElement.value

@@ -9,6 +9,9 @@ from Components.Harddisk import harddiskmanager
 from ServiceReference import ServiceReference
 from Components.config import config
 
+import six
+
+
 searchPaths = []
 lastPiconPath = None
 
@@ -85,7 +88,7 @@ def getPiconName(serviceName):
 		try:
 			name = ServiceReference(serviceName).getServiceName()
 			#print "[Picon] unicodedata.normalize: ", name
-			name = unicodedata.normalize('NFKD', unicode(name, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+			name = unicodedata.normalize('NFKD', six.text_type(name, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
 			name = re.sub('[^a-z0-9]', '', name.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
 			#print "[Picon] picon by channel name: ", name
 			if name:

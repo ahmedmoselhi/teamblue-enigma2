@@ -1,6 +1,9 @@
 from Tools.CList import CList
 from functools import reduce
 
+from six.moves import reduce
+
+
 # down                       up
 # Render Converter Converter Source
 
