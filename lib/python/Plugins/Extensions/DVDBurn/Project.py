@@ -4,6 +4,7 @@ from Components.config import config, ConfigSubsection, ConfigInteger, ConfigTex
 import Title
 import xml.dom.minidom
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_FONTS
+import six
 
 class ConfigColor(ConfigSequence):
 	def __init__(self, default = [128,128,128]):
@@ -17,9 +18,9 @@ class ConfigFilename(ConfigText):
 		if self.text == "":
 			return ("mtext"[1-selected:], "", 0)
 		cut_len = min(len(self.text),40)
-		filename = (self.text.rstrip("/").rsplit("/",1))[1].encode("utf-8")[:cut_len] + " "
+		filename = six.ensure_str((self.text.rstrip("/").rsplit("/", 1))[1])[:cut_len] + " "
 		if self.allmarked:
-			mark = range(0, len(filename))
+			mark = list(range(0, len(filename)))
 		else:
 			mark = [filename]
 		return ("mtext"[1-selected:], filename, mark)
@@ -70,7 +71,7 @@ class Project:
 			list.append('\t\t\t<properties ')
 			audiotracks = []
 			for key, val in six.iteritems(title.properties.dict()):
-				if type(val) is ConfigSubList:
+				if isinstance(val, ConfigSubList):
 					audiotracks.append('\t\t\t<audiotracks>\n')
 					for audiotrack in val:
 						audiotracks.append('\t\t\t\t<audiotrack ')
@@ -115,7 +116,7 @@ class Project:
 				self.error = "xml file not found!"
 				#raise AttributeError
 			file = open(filename, "r")
-			data = file.read().decode("utf-8").replace('&',"&amp;").encode("ascii",'xmlcharrefreplace')
+			data = file.read().decode("utf-8").replace('&', "&amp;").encode("ascii", 'xmlcharrefreplace')
 			file.close()
 			projectfiledom = xml.dom.minidom.parseString(data)
 			for node in projectfiledom.childNodes[0].childNodes:
@@ -151,11 +152,11 @@ class Project:
 				#raise AttributeError
 			while i < node.attributes.length:
 				item = node.attributes.item(i)
-				key = item.name.encode("utf-8")
+				key = six.ensure_str(item.name)
 				try:
 					val = eval(item.nodeValue)
 				except (NameError, SyntaxError):
-					val = item.nodeValue.encode("utf-8")
+					val = six.ensure_str(item.nodeValue)
 				try:
 					print("config[%s].setValue(%s)" % (key, val))
 					config.dict()[key].setValue(val)
@@ -182,7 +183,7 @@ class Project:
 				if subnode.tagName == 'path':
 					print("path:", subnode.firstChild.data)
 					filename = subnode.firstChild.data
-					self.titles[title_idx].addFile(filename.encode("utf-8"))
+					self.titles[title_idx].addFile(six.ensure_str(filename))
 				if subnode.tagName == 'properties':
 					self.xmlAttributesToConfig(node, self.titles[title_idx].properties)
 				if subnode.tagName == 'audiotracks':
@@ -247,9 +248,6 @@ class MenuTemplate(Project):
 		return ret
 
 from Tools.ISO639 import ISO639Language
-
-import six
-
 
 class DVDISO639Language(ISO639Language):
 	def __init__(self):

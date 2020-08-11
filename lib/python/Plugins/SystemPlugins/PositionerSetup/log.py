@@ -4,11 +4,10 @@
 # import log
 # print("Some text", file=log)
 # because the log unit looks enough like a file!
+from __future__ import print_function
 
 from future import standard_library
 standard_library.install_aliases()
-
-from __future__ import print_function
 
 import sys
 from io import StringIO
