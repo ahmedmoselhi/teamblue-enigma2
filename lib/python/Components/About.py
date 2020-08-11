@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import struct, socket, fcntl, re, sys, os, time
-from sys import modules
+from sys import modules, version_info
 from Tools.HardwareInfo import HardwareInfo
 
 from boxbranding import getBoxType, getMachineBuild, getImageVersion
