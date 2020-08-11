@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division
 
 from Screens.Screen import Screen
-from Screens.ChannelSelection import ChannelSelection
+import Screens.ChannelSelection
 import Screens.InfoBar
 from Components.config import config, ConfigClock
 from Components.Pixmap import Pixmap
