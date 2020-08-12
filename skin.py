@@ -47,6 +47,8 @@ parameters = {}  # Dictionary of skin parameters used to modify code behavior.
 setups = {}  # Dictionary of images associated with setup menus.
 switchPixmap = {}  # Dictionary of switch images.
 windowStyles = {}  # Dictionary of window styles for each screen ID.
+constantWidgets = {}
+variables = {}
 
 config.skin = ConfigSubsection()
 skin = resolveFilename(SCOPE_SKIN, DEFAULT_SKIN)
@@ -285,6 +287,8 @@ def getParentSize(object, desktop):
 	return eSize()
 
 def parseValuePair(s, scale, object=None, desktop=None, size=None):
+	if s in variables:
+		s = variables[s]
 	x, y = s.split(",")
 	parentsize = eSize()
 	if object and ("c" in x or "c" in y or "e" in x or "e" in y or "%" in x or "%" in y):  # Need parent size for ce%
@@ -396,7 +400,7 @@ class AttributeParser:
 		except AttributeError:
 			print("[Skin] Attribute '%s' (with value of '%s') in object of type '%s' is not implemented!" % (attrib, value, self.guiObject.__class__.__name__))
 		except SkinError as err:
-			print("[Skin] Error: %s" % str(err))
+			print("[Skin] Error:", err)
 		except Exception:
 			print("[Skin] Attribute '%s' with wrong (or unknown) value '%s' in object of type '%s'!" % (attrib, value, self.guiObject.__class__.__name__))
 
@@ -411,10 +415,16 @@ class AttributeParser:
 		pass
 
 	def position(self, value):
-		self.guiObject.move(ePoint(*value) if isinstance(value, tuple) else parsePosition(value, self.scaleTuple, self.guiObject, self.desktop, self.guiObject.csize()))
+		if isinstance(value, tuple):
+			self.guiObject.move(ePoint(*value))
+		else:
+			self.guiObject.move(parsePosition(value, self.scaleTuple, self.guiObject, self.desktop, self.guiObject.csize()))
 
 	def size(self, value):
-		self.guiObject.resize(eSize(*value) if isinstance(value, tuple) else parseSize(value, self.scaleTuple, self.guiObject, self.desktop))
+		if isinstance(value, tuple):
+			self.guiObject.resize(eSize(*value))
+		else:
+			self.guiObject.resize(parseSize(value, self.scaleTuple, self.guiObject, self.desktop))
 
 	def animationPaused(self, value):
 		pass
@@ -524,10 +534,14 @@ class AttributeParser:
 			print("[Skin] Error: Invalid halign '%s'!  Must be one of 'left', 'center', 'right' or 'block'." % value)
 
 	def textOffset(self, value):
+		if value in variables:
+			value = variables[value]
 		x, y = value.split(",")
 		self.guiObject.setTextOffset(ePoint(int(x) * self.scaleTuple[0][0] / self.scaleTuple[0][1], int(y) * self.scaleTuple[1][0] / self.scaleTuple[1][1]))
 
 	def flags(self, value):
+		if value in variables:
+			value = variables[value]
 		flags = value.split(",")
 		for f in flags:
 			try:
@@ -647,8 +661,12 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
 	global colors, fonts, menus, parameters, setups, switchPixmap
 	for tag in domSkin.findall("output"):
-		scrnID = int(tag.attrib.get("id", GUI_SKIN_ID))
-		if scrnID == GUI_SKIN_ID:
+		id = tag.attrib.get("id")
+		if id:
+			id = int(id)
+		else:
+			id = GUI_SKIN_ID
+		if id == GUI_SKIN_ID:
 			for res in tag.findall("resolution"):
 				xres = res.attrib.get("xres")
 				xres = int(xres) if xres else 720
@@ -812,6 +830,18 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 				# print("[Skin] DEBUG: Setup key='%s', image='%s'." % (key, image))
 			else:
 				raise SkinError("Tag setup needs key and image, got key='%s' and image='%s'" % (key, image))
+	for tag in domSkin.findall("constant-widgets"):
+		for constant_widget in tag.findall("constant-widget"):
+			name = constant_widget.attrib.get("name")
+			if name:
+				constantWidgets[name] = constant_widget
+	for tag in domSkin.findall("variables"):
+		for parameter in tag.findall("variable"):
+			name = parameter.attrib.get("name")
+			value = parameter.attrib.get("value")
+			x, y = value.split(",")
+			if value and name:
+				variables[name] = "%s,%s" % (str(x), str(y))
 	for tag in domSkin.findall("subtitles"):
 		from enigma import eSubtitleWidget
 		scale = ((1, 1), (1, 1))
@@ -838,7 +868,11 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 			eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, borderColor, borderWidth)
 	for tag in domSkin.findall("windowstyle"):
 		style = eWindowStyleSkinned()
-		scrnID = int(tag.attrib.get("id", GUI_SKIN_ID))
+		scrnID = tag.attrib.get("id")
+		if scrnID:
+			scrnID = int(scrnID)
+		else:
+			scrnID = GUI_SKIN_ID
 		font = gFont("Regular", 20)  # Default
 		offset = eSize(20, 5)  # Default
 		for title in tag.findall("title"):
@@ -870,7 +904,11 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 		x = eWindowStyleManager.getInstance()
 		x.setStyle(scrnID, style)
 	for tag in domSkin.findall("margin"):
-		scrnID = int(tag.attrib.get("id", GUI_SKIN_ID))
+		scrnID = tag.attrib.get("id")
+		if scrnID:
+			scrnID = int(scrnID)
+		else:
+			scrnID = GUI_SKIN_ID
 		r = eRect(0, 0, 0, 0)
 		v = tag.attrib.get("left")
 		if v:
@@ -924,6 +962,8 @@ class SkinContext:
 		return "Context (%s,%s)+(%s,%s) " % (self.x, self.y, self.w, self.h)
 
 	def parse(self, pos, size, font):
+		if size in variables:
+			size = variables[size]
 		if pos == "fill":
 			pos = (self.x, self.y)
 			size = (self.w, self.h)
@@ -952,6 +992,8 @@ class SkinContext:
 				size = (w, self.h)
 				self.w -= w
 			else:
+				if pos in variables:
+					pos = variables[pos]
 				size = (w, h)
 				pos = pos.split(",")
 				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font), self.y + parseCoordinate(pos[1], self.h, size[1], font))
@@ -962,6 +1004,8 @@ class SkinContext:
 #
 class SkinContextStack(SkinContext):
 	def parse(self, pos, size, font):
+		if size in variables:
+			size = variables[size]
 		if pos == "fill":
 			pos = (self.x, self.y)
 			size = (self.w, self.h)
@@ -982,6 +1026,8 @@ class SkinContextStack(SkinContext):
 				pos = (self.x + self.w - w, self.y)
 				size = (w, self.h)
 			else:
+				if pos in variables:
+					pos = variables[pos]
 				size = (w, h)
 				pos = pos.split(",")
 				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font), self.y + parseCoordinate(pos[1], self.h, size[1], font))
@@ -1033,6 +1079,21 @@ def readSkin(screen, skin, names, desktop):
 	screen.additionalWidgets = []
 	screen.renderer = []
 	usedComponents = set()
+
+	def processConstant(constant_widget, context):
+		wname = constant_widget.attrib.get("name")
+		if wname:
+			try:
+				cwvalue = constantWidgets[wname]
+			except KeyError:
+				raise SkinError("Given constant-widget '%s' not found in skin" % wname)
+		if cwvalue:
+			for x in cwvalue:
+				myScreen.append((x))
+		try:
+			myScreen.remove(constant_widget)
+		except ValueError:
+			pass
 
 	def processNone(widget, context):
 		pass
@@ -1140,6 +1201,8 @@ def readSkin(screen, skin, names, desktop):
 		screen.additionalWidgets.append(w)
 
 	def processScreen(widget, context):
+		for w in widget.findall('constant-widget'):
+			processConstant(w, context)
 		for w in widget.getchildren():
 			conditional = w.attrib.get("conditional")
 			if conditional and not [i for i in conditional.split(",") if i in screen.keys()]:
@@ -1175,6 +1238,7 @@ def readSkin(screen, skin, names, desktop):
 
 	processors = {
 		None: processNone,
+		"constant-widget": processConstant,
 		"widget": processWidget,
 		"applet": processApplet,
 		"eLabel": processLabel,
