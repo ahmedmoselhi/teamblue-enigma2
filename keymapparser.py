@@ -44,14 +44,14 @@ def parseKeys(context, filename, actionmap, device, keys):
 
 		flags = sum(map(flag_ascii_to_id, flags))
 
-		assert mapto, "[keymapparser] %s: must specify mapto in context %s, id '%s'" % (filename, context, id)
-		assert id, "[keymapparser] %s: must specify id in context %s, mapto '%s'" % (filename, context, mapto)
-		assert flags, "[keymapparser] %s: must specify at least one flag in context %s, id '%s'" % (filename, context, id)
+		assert mapto, "[keymapparser] %s: must specify mapto in context %s, id '%s'" % (str(filename), context, id)
+		assert id, "[keymapparser] %s: must specify id in context %s, mapto '%s'" % (str(filename), context, mapto)
+		assert flags, "[keymapparser] %s: must specify at least one flag in context %s, id '%s'" % (str(filename), context, id)
 
 		keyid = getKeyId(id)
-#				print "[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid)
-		actionmap.bindKey(filename, device, keyid, flags, context, mapto)
-		addKeyBinding(filename, keyid, context, mapto, flags)
+#		print("[keymapparser] " + context + "::" + mapto + " -> " + device + "." + hex(keyid) + " = " + device + "." + str(keyid) )
+		actionmap.bindKey(str(filename), device, keyid, flags, context, mapto)
+		addKeyBinding(str(filename), keyid, context, mapto, flags)
 
 
 def parseTrans(filename, actionmap, device, keys):
@@ -59,7 +59,7 @@ def parseTrans(filename, actionmap, device, keys):
 		get_attr = x.attrib.get
 		toggle_key = get_attr("from")
 		toggle_key = getKeyId(toggle_key)
-		actionmap.bindToggle(filename, device, toggle_key)
+		actionmap.bindToggle(str(filename), device, toggle_key)
 
 	for x in keys.findall("key"):
 		get_attr = x.attrib.get
@@ -72,7 +72,7 @@ def parseTrans(filename, actionmap, device, keys):
 		keyin  = getKeyId(keyin)
 		keyout = getKeyId(keyout)
 		toggle = int(toggle)
-		actionmap.bindTranslation(filename, device, keyin, keyout, toggle)
+		actionmap.bindTranslation(str(filename), device, keyin, keyout, toggle)
 
 
 def readKeymap(filename):
@@ -80,15 +80,15 @@ def readKeymap(filename):
 	assert p
 
 	try:
-		source = open(filename)
+		source = open(str(filename))
 	except:
-		print("[keymapparser] keymap file " + filename + " not found")
+		print("[keymapparser] keymap file " + str(filename) + " not found")
 		return
 
 	try:
 		dom = xml.etree.cElementTree.parse(source)
 	except:
-		raise KeymapError("[keymapparser] keymap %s not well-formed." % filename)
+		raise KeymapError("[keymapparser] keymap %s not well-formed." % str(filename))
 
 	keymap = dom.getroot()
 
@@ -96,15 +96,15 @@ def readKeymap(filename):
 		context = cmap.attrib.get("context")
 		assert context, "[keymapparser] map must have context"
 
-		parseKeys(context, filename, p, "generic", cmap)
+		parseKeys(context, str(filename), p, "generic", cmap)
 
 		for device in cmap.findall("device"):
-			parseKeys(context, filename, p, device.attrib.get("name"), device)
+			parseKeys(context, str(filename), p, device.attrib.get("name"), device)
 
 	for ctrans in keymap.findall("translate"):
 		for device in ctrans.findall("device"):
-			parseTrans(filename, p, device.attrib.get("name"), device)
+			parseTrans(str(filename), p, device.attrib.get("name"), device)
 
 def removeKeymap(filename):
 	p = enigma.eActionMap.getInstance()
-	p.unbindKeyDomain(filename)
+	p.unbindKeyDomain(str(filename))
