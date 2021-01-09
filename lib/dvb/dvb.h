@@ -226,7 +226,6 @@ public:
 			   the frontend must be tuned lateron. there is no guarante
 			   that tuning will succeed - it just means that if this frontend
 			   can't tune, no other frontend could do it.
-
 			   there might be a priority given to certain frontend/chid
 			   combinations. this will be evaluated here. */
 	RESULT allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate=false);
