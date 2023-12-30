@@ -1,11 +1,10 @@
-from __future__ import print_function
-from __future__ import absolute_import
+# -*- coding: utf-8 -*-
 import os
 from time import sleep
 from enigma import eAVSwitch, eDVBVolumecontrol, getDesktop
 from Components.config import config, ConfigSlider, ConfigSelection, ConfigSubDict, ConfigYesNo, ConfigEnableDisable, ConfigOnOff, ConfigSubsection, ConfigBoolean, ConfigSelectionNumber, ConfigNothing, NoSave
 from Components.About import about
-from Components.SystemInfo import BoxInfo
+from Components.SystemInfo import SystemInfo, BoxInfo
 from Tools.CList import CList
 from Tools.HardwareInfo import HardwareInfo
 
@@ -18,6 +17,7 @@ has_scartyuv = BoxInfo.getItem("scartyuv", False)
 has_dvi = BoxInfo.getItem("dvi", False)
 BRAND = BoxInfo.getItem("brand")
 MACHINEBUILD = BoxInfo.getItem("machinebuild")
+MODEL = BoxInfo.getItem("model", default="unknown")
 
 config.av = ConfigSubsection()
 config.av.edid_override = ConfigYesNo(default=False)
@@ -521,6 +521,9 @@ class AVSwitch:
 			f = open("/proc/stb/video/policy2", "w")
 			f.write(cfgelement.value)
 			f.close()
+
+	def setSystem(self, value):
+		eAVControl.getInstance().setVideoMode(MODEL)
 
 	def getOutputAspect(self):
 		ret = (16, 9)

@@ -6,6 +6,7 @@ import re
 import os
 import time
 from Tools.HardwareInfo import HardwareInfo
+from Components.SystemInfo import BoxInfo
 from builtins import round
 
 from boxbranding import getBoxType, getMachineBuild, getImageType, getImageVersion
@@ -35,6 +36,8 @@ def getImageVersionString():
 		pass
 	return _("unavailable")
 
+def getOEVersionString():
+	return BoxInfo.getItem("oe").title()
 
 def getFlashDateString():
 	try:

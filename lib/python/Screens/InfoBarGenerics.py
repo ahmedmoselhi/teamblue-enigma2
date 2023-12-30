@@ -41,7 +41,6 @@ from ServiceReference import ServiceReference, isPlayableForCur
 from Tools.ASCIItranslit import legacyEncode
 from Tools.Directories import fileExists, getRecordingFilename, moveFiles, isPluginInstalled
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
-from Tools.HardwareInfo import HardwareInfo
 
 from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB
 from skin import findSkinScreen
@@ -64,6 +63,10 @@ import six
 
 # hack alert!
 from Screens.Menu import MainMenu, mdom
+
+MODEL = BoxInfo.getItem("model", default="unknown")
+
+MODULE_NAME = __name__.split(".")[-1]
 
 
 def isStandardInfoBar(self):

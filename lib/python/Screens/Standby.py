@@ -48,6 +48,7 @@ def setLCDModeMinitTV(value):
 	except:
 		pass
 
+getBoxDisplayName = BoxInfo.getItem("model", default="unknown")
 
 def isInfoBarInstance():
 	global infoBarInstance

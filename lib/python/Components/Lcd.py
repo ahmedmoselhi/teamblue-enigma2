@@ -7,14 +7,14 @@ from twisted.internet import threads
 from enigma import eActionMap, eDBoxLCD, eTimer
 
 from Components.config import ConfigNothing, ConfigSelection, ConfigSlider, ConfigSubsection, ConfigYesNo, config
-from Components.SystemInfo import BoxInfo
+from Components.SystemInfo import SystemInfo, BoxInfo
 from Screens.InfoBar import InfoBar
 from Screens.Screen import Screen
 from Screens.Standby import inTryQuitMainloop
 from Tools.Directories import fileReadLine, fileWriteLine
 
 
-MODEL = BoxInfo.getItem("model")
+MODEL = BoxInfo.getItem("model", default="unknown")
 
 colorsList = [
 	("0xff0000", _("Red")),
@@ -36,7 +36,6 @@ config.lcd.ledblinkcontrolcolor = ConfigSelection(choices=colorsList, default="0
 config.lcd.ledbrightnesscontrol = ConfigSlider(default=0xff, increment=25, limits=(0, 0xff))
 config.lcd.ledcolorcontrolcolor = ConfigSelection(choices=colorsList, default="0xffffff")
 config.lcd.ledfadecontrolcolor = ConfigSelection(choices=colorsList, default="0xffffff")
-
 
 class dummyScreen(Screen):
 	skin = """
