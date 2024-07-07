@@ -117,6 +117,7 @@ def InitUsageConfig():
 	config.usage.volume_instead_of_channelselection = ConfigYesNo(default=False)
 	config.usage.channelselection_preview = ConfigYesNo(default=False)
 	config.usage.show_spinner = ConfigYesNo(default=True)
+	config.usage.usedefaultspinner = ConfigYesNo(default=False)
 	config.usage.disable_blinking = ConfigYesNo(default=True)
 	config.usage.menu_sort_weight = ConfigDictionarySet(default={"mainmenu": {"submenu": {}}})
 	config.usage.menu_sort_mode = ConfigSelection(default="default", choices=[("a_z", _("alphabetical")), ("default", _("Default")), ("user", _("user defined")), ("user_hidden", _("user defined hidden"))])
@@ -155,7 +156,6 @@ def InitUsageConfig():
 	config.usage.timeshift_path = ConfigText(default="/media/hdd/")
 	config.usage.allowed_timeshift_paths = ConfigLocations(default=["/media/hdd/"])
 	config.usage.timeshift_skipreturntolive = ConfigYesNo(default=False)
-
 	config.usage.movielist_trashcan = ConfigYesNo(default=True)
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
 	config.usage.movielist_trashcan_reserve = ConfigNumber(default=40)
@@ -168,7 +168,7 @@ def InitUsageConfig():
 		("ask", _("Ask user")), ("movielist", _("Return to movie list")), ("quit", _("Return to previous service"))])
 	config.usage.on_movie_eof = ConfigSelection(default="movielist", choices=[
 		("ask", _("Ask user")), ("movielist", _("Return to movie list")), ("quit", _("Return to previous service")), ("pause", _("Pause movie at end")), ("playlist", _("Play next (return to movie list)")),
-		("playlistquit", _("Play next (return to previous service)")), ("loop", _("Continues play (loop)")), ("repeatcurrent", _("Repeat"))])
+		("playlistquit", _("Play next (return to previous service)")), ("loop", _("Continuous play (loop)")), ("repeatcurrent", _("Repeat"))])
 	config.usage.next_movie_msg = ConfigYesNo(default=True)
 	config.usage.last_movie_played = ConfigText()
 	config.usage.leave_movieplayer_onExit = ConfigSelection(default="popup", choices=[
@@ -471,6 +471,14 @@ def InitUsageConfig():
 		config.usage.LcdLiveDecoder.addNotifier(setLcdLiveDecoder)
 
 	config.usage.boolean_graphic = ConfigSelection(default="true", choices={"false": _("no"), "true": _("yes"), "only_bool": _("yes, but not in multi selections")})
+
+	config.usage.multiboot_order = ConfigYesNo(default=True)
+
+	config.usage.setupShowDefault = ConfigSelection(default="spaces", choices=[
+		("", _("Don't show default")),
+		("spaces", _("Show default after description")),
+		("newline", _("Show default on new line"))
+	])
 
 	config.epg = ConfigSubsection()
 	config.epg.eit = ConfigYesNo(default=True)

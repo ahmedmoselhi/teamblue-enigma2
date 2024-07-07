@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2 teamBlue\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-24 10:35+0200\n"
+"POT-Creation-Date: 2024-06-20 07:37+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: satdreamgr\n"
 "Language-Team: \n"
@@ -208,6 +208,9 @@ msgid "%A %e %B %Y"
 msgstr ""
 
 msgid "%H:%M"
+msgstr ""
+
+msgid "%R"
 msgstr ""
 
 #, fuzzy
@@ -435,6 +438,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #, python-format
+msgid "%s%s(Default: %s)"
+msgstr ""
+
+#, python-format
 msgid "%s: %s"
 msgstr ""
 
@@ -632,9 +639,6 @@ msgid "=NO STREAM\n"
 msgstr ""
 
 msgid "?"
-msgstr ""
-
-msgid "??"
 msgstr ""
 
 msgid "A"
@@ -1200,6 +1204,11 @@ msgid "Are you sure you want to reload the EPG data from:\n"
 msgstr ""
 
 msgid ""
+"Are you sure you want to remove your wifi configuration?\n"
+"\n"
+msgstr ""
+
+msgid ""
 "Are you sure you want to restart your network interfaces?\n"
 "\n"
 msgstr ""
@@ -1615,6 +1624,9 @@ msgstr ""
 msgid "Blue"
 msgstr ""
 
+msgid "Blue button function"
+msgstr ""
+
 msgid "Bolivia (Plurinational State of)"
 msgstr ""
 
@@ -1839,6 +1851,12 @@ msgid "Canada"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Cancel any changed settings and exit"
+msgstr ""
+
+msgid "Cancel any changed settings and exit all menus"
 msgstr ""
 
 msgid "Cancel any changes to the currently active skin"
@@ -2246,6 +2264,9 @@ msgstr ""
 msgid "Common Interface"
 msgstr ""
 
+msgid "Common Setup Actions"
+msgstr ""
+
 msgid "Communication"
 msgstr ""
 
@@ -2415,7 +2436,7 @@ msgstr ""
 msgid "Configure the duration in minutes for the screensaver."
 msgstr ""
 
-msgid "Configure the duration in minutes for the sleeptimer. Select this entry and click OK or green to start/stop the sleeptimer"
+msgid "Configure the duration in minutes for the sleeptimer. Select this entry and press blue to start/restart the sleeptimer or use yellow for stop active sleeptimer."
 msgstr ""
 
 msgid "Configure the duration when the receiver should go to shut down in case the receiver is in standby mode."
@@ -2616,9 +2637,6 @@ msgstr ""
 msgid "Configure your network again"
 msgstr ""
 
-msgid "Configure your network settings and press OK to scan"
-msgstr ""
-
 msgid "Configure your wireless LAN again"
 msgstr ""
 
@@ -2700,8 +2718,8 @@ msgstr ""
 msgid "Continue playing"
 msgstr ""
 
-msgid "Continues play (loop)"
-msgstr ""
+msgid "Continuous play (loop)"
+msgstr "Continuous play (loop)"
 
 msgid "Contrast"
 msgstr ""
@@ -3083,6 +3101,10 @@ msgstr ""
 msgid "Default+Picon"
 msgstr ""
 
+#, python-format
+msgid "Default: '%s'."
+msgstr ""
+
 msgid "Define additional delay in milliseconds before start of http(s) streams, e.g. to connect a remote tuner, you use a complex system of DiSEqC."
 msgstr ""
 
@@ -3168,7 +3190,16 @@ msgstr ""
 msgid "Delete Image"
 msgstr ""
 
+msgid "Delete Wifi configuration"
+msgstr ""
+
 msgid "Delete all the text"
+msgstr ""
+
+msgid "Delete character to left of cursor or select AM times"
+msgstr ""
+
+msgid "Delete character under cursor or select PM times"
 msgstr ""
 
 msgid "Delete current line"
@@ -3202,6 +3233,9 @@ msgid "Delete the character to the left of text cursor"
 msgstr ""
 
 msgid "Delete the character under the text cursor"
+msgstr ""
+
+msgid "Delete the current Wifi configuration.\n"
 msgstr ""
 
 msgid "Delete the selected files or directories"
@@ -3372,6 +3406,9 @@ msgstr ""
 msgid "Disable move mode"
 msgstr ""
 
+msgid "Disable operator profiles"
+msgstr ""
+
 msgid "Disable timer"
 msgstr ""
 
@@ -3426,6 +3463,9 @@ msgid "Display movie length in movielist (except single line style)."
 msgstr ""
 
 msgid "Display setup"
+msgstr ""
+
+msgid "Display the virtual keyboard for data entry"
 msgstr ""
 
 msgid "Djibouti"
@@ -3609,6 +3649,9 @@ msgid "Don't add this recording"
 msgstr ""
 
 msgid "Don't save and stop timeshift"
+msgstr ""
+
+msgid "Don't show default"
 msgstr ""
 
 msgid "Don't stop current event but disable coming events"
@@ -3960,6 +4003,9 @@ msgstr ""
 msgid "Enable volume control with arrow buttons"
 msgstr ""
 
+msgid "Enable wakeup timer"
+msgstr ""
+
 msgid "Enable zapping with CH+/-, B+/-, P+/-"
 msgstr ""
 
@@ -4143,6 +4189,9 @@ msgstr ""
 msgid "Error reading bouquets.tv"
 msgstr ""
 
+msgid "Error removing your wifi configuration"
+msgstr ""
+
 #, python-format
 msgid ""
 "Error renaming %s to %s:\n"
@@ -4217,6 +4266,9 @@ msgid "Exceeds Bludisc medium!"
 msgstr ""
 
 msgid "Exceeds dual layer medium!"
+msgstr ""
+
+msgid "Exclude first CA device"
 msgstr ""
 
 msgid "Execution finished!!"
@@ -4603,6 +4655,10 @@ msgstr ""
 msgid "Filesystem check"
 msgstr ""
 
+#, python-format
+msgid "Filesystem: %s\n"
+msgstr ""
+
 msgid "Filter extension for 'My extension' setting of 'Filter extension'. Use the extension name without a '.'."
 msgstr ""
 
@@ -4634,6 +4690,9 @@ msgid "Finished"
 msgstr ""
 
 msgid "Finished configuring your network"
+msgstr ""
+
+msgid "Finished removing your wifi configuration"
 msgstr ""
 
 msgid "Finished restarting your network"
@@ -4753,6 +4812,10 @@ msgid "Frame size in full view"
 msgstr ""
 
 msgid "France"
+msgstr ""
+
+#, python-format
+msgid "Free: %s/%s\n"
 msgstr ""
 
 msgid "French"
@@ -5181,9 +5244,6 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-msgid "Hide and confirm invalid key message"
-msgstr ""
-
 msgid "Hide channel list in radio mode"
 msgstr ""
 
@@ -5462,6 +5522,9 @@ msgstr ""
 msgid "Import remote receiver URL"
 msgstr ""
 
+msgid "In Setup screens choose whether to show the default value of the selected item in the description field."
+msgstr ""
+
 msgid "In most cases this should be set to No. Only enable if you have a very specific need."
 msgstr ""
 
@@ -5715,6 +5778,9 @@ msgstr ""
 msgid "Internal flash"
 msgstr ""
 
+msgid "Internal flash storage:"
+msgstr ""
+
 msgid "Internal hdd only"
 msgstr ""
 
@@ -5805,7 +5871,7 @@ msgstr ""
 msgid "Italy"
 msgstr ""
 
-msgid "Items per page "
+msgid "Items per page"
 msgstr ""
 
 msgid "Items per page for list screen"
@@ -5833,6 +5899,12 @@ msgid "Jump to beginning of list"
 msgstr ""
 
 msgid "Jump to end of list"
+msgstr ""
+
+msgid "Jump to first item in list or the start of text"
+msgstr ""
+
+msgid "Jump to last item in list or the end of text"
 msgstr ""
 
 msgid "Jump to next marked position"
@@ -6346,6 +6418,9 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
+msgid "Menu button function"
+msgstr ""
+
 #, python-format
 msgid "Menusort (%s)"
 msgstr ""
@@ -6530,6 +6605,10 @@ msgstr ""
 msgid "MountView"
 msgstr ""
 
+#, python-format
+msgid "Mountpoint: %s (%s)\n"
+msgstr ""
+
 msgid "Mountpoints"
 msgstr ""
 
@@ -6553,6 +6632,12 @@ msgid "Move PiP to main picture"
 msgstr ""
 
 msgid "Move Picture in Picture"
+msgstr ""
+
+msgid "Move down a line"
+msgstr ""
+
+msgid "Move down a screen"
 msgstr ""
 
 msgid "Move down list"
@@ -6597,6 +6682,13 @@ msgstr ""
 msgid "Move the text cursor to the last character"
 msgstr ""
 
+msgid "Move to first line / screen"
+msgstr ""
+
+#, fuzzy
+msgid "Move to last line / screen"
+msgstr "Show tag menu"
+
 msgid "Move to position X"
 msgstr ""
 
@@ -6610,6 +6702,12 @@ msgid "Move to the previous page"
 msgstr ""
 
 msgid "Move to the previous skin"
+msgstr ""
+
+msgid "Move up a line"
+msgstr ""
+
+msgid "Move up a screen"
 msgstr ""
 
 msgid "Move up list"
@@ -6926,6 +7024,9 @@ msgid "No age block"
 msgstr ""
 
 msgid "No backup needed"
+msgstr ""
+
+msgid "No config items available"
 msgstr ""
 
 msgid ""
@@ -7447,9 +7548,6 @@ msgstr ""
 msgid "PREVIOUS"
 msgstr ""
 
-msgid "PVR"
-msgstr ""
-
 msgid "Package list update"
 msgstr ""
 
@@ -7711,6 +7809,9 @@ msgstr ""
 msgid "Please connect your %s %s to the internet"
 msgstr ""
 
+msgid "Please contact the manufacturer for clarification."
+msgstr ""
+
 msgid "Please do not change any values unless you know what you are doing!"
 msgstr ""
 
@@ -7907,6 +8008,9 @@ msgstr "Please wait while scanning..."
 msgid "Please wait, Loading image."
 msgstr ""
 
+msgid "Please wait, restarting cardserver."
+msgstr ""
+
 msgid "Please wait, restarting primary and secondary softcam."
 msgstr ""
 
@@ -7915,6 +8019,13 @@ msgstr ""
 
 msgid "Please wait, restarting secondary softcam."
 msgstr ""
+
+msgid "Please wait, restarting softcam and cardserver."
+msgstr ""
+
+#, fuzzy
+msgid "Please wait, restarting softcam."
+msgstr "Please wait while scanning..."
 
 msgid "Please wait..."
 msgstr ""
@@ -8128,9 +8239,6 @@ msgstr ""
 msgid "Press OK to activate the selected %s skin."
 msgstr ""
 
-msgid "Press OK to activate the settings."
-msgstr ""
-
 msgid "Press OK to edit the settings."
 msgstr ""
 
@@ -8173,6 +8281,9 @@ msgid "Press OK to toggle the selection."
 msgstr ""
 
 msgid "Press OK, save and exit..."
+msgstr ""
+
+msgid "Press green button to activate the settings."
 msgstr ""
 
 msgid "Press or select button and then press 'OK' for attach function."
@@ -8456,9 +8567,6 @@ msgid "Rec"
 msgstr ""
 
 msgid "Recall to previous service"
-msgstr ""
-
-msgid "Receiver or driver does not support FCC"
 msgstr ""
 
 msgid "Reception lists"
@@ -8785,7 +8893,13 @@ msgstr ""
 msgid "Restart Network Adapter"
 msgstr ""
 
+msgid "Restart Sleeptimer"
+msgstr ""
+
 msgid "Restart both"
+msgstr ""
+
+msgid "Restart cardserver"
 msgstr ""
 
 msgid "Restart enigma"
@@ -8798,6 +8912,9 @@ msgid "Restart primary softcam"
 msgstr ""
 
 msgid "Restart secondary softcam"
+msgstr ""
+
+msgid "Restart softcam"
 msgstr ""
 
 msgid "Restart test"
@@ -9099,6 +9216,9 @@ msgstr ""
 msgid "Save EPG every (in hours)"
 msgstr ""
 
+msgid "Save all changed settings and exit"
+msgstr ""
+
 msgid "Save and activate the currently selected skin"
 msgstr ""
 
@@ -9387,6 +9507,9 @@ msgstr ""
 msgid "Select CAId"
 msgstr ""
 
+msgid "Select Card Server"
+msgstr ""
+
 msgid "Select Fast DiSEqC if your aerial system supports this. If you are unsure select 'no'."
 msgstr ""
 
@@ -9397,6 +9520,9 @@ msgid "Select OPKG source....."
 msgstr ""
 
 msgid "Select Service"
+msgstr ""
+
+msgid "Select Softcam"
 msgstr ""
 
 msgid "Select Software Update"
@@ -9586,6 +9712,12 @@ msgstr ""
 msgid "Select the movie path"
 msgstr ""
 
+msgid "Select the next item in list or move cursor right"
+msgstr ""
+
+msgid "Select the previous item in list or move cursor left"
+msgstr ""
+
 msgid "Select the protocol used by your SCR device. Choices are 'SCR Unicable' (Unicable), or 'SCR JESS' (JESS, also known as Unicable II)."
 msgstr ""
 
@@ -9679,10 +9811,10 @@ msgstr "Adjust 3D settings"
 msgid "Select your provider and region. If not present in this list you will need to select one of the other 'service scan types'."
 msgstr ""
 
-msgid "Select your provider, and press OK to start the scan"
+msgid "Select your region. If not available change 'Country' to 'all' and select one of the default alternatives."
 msgstr ""
 
-msgid "Select your region. If not available change 'Country' to 'all' and select one of the default alternatives."
+msgid "Select, toggle, process or edit the current entry"
 msgstr ""
 
 msgid "Selected mount point is already used by another drive."
@@ -9840,6 +9972,9 @@ msgid "Set action when movie playback is finished."
 msgstr ""
 
 msgid "Set all hotkey to default?"
+msgstr ""
+
+msgid "Set all the settings back as they were"
 msgstr ""
 
 msgid "Set alternative fallback tuners for DVB-T/C or ATSC"
@@ -10043,6 +10178,9 @@ msgstr ""
 msgid "Show Weather Widget"
 msgstr ""
 
+msgid "Show additional information on infobar"
+msgstr ""
+
 #, fuzzy
 msgid "Show alternatives"
 msgstr "Show tag menu"
@@ -10097,6 +10235,12 @@ msgid "Show crypto info in infobar"
 msgstr ""
 
 msgid "Show current mode"
+msgstr ""
+
+msgid "Show default after description"
+msgstr ""
+
+msgid "Show default on new line"
 msgstr ""
 
 msgid "Show detailed event info"
@@ -10260,10 +10404,19 @@ msgstr ""
 msgid "Show servicelist or movies"
 msgstr ""
 
+msgid "Show setup default values"
+msgstr ""
+
 msgid "Show simple second infobar"
 msgstr ""
 
 msgid "Show single service EPG"
+msgstr ""
+
+msgid "Show softcam information"
+msgstr ""
+
+msgid "Show softcam setup in extensions menu"
 msgstr ""
 
 msgid "Show softcam startup in extensions menu"
@@ -10529,6 +10682,13 @@ msgstr ""
 msgid "SocketMMI"
 msgstr ""
 
+msgid "Softcam Setup"
+msgstr ""
+
+#, fuzzy
+msgid "Softcam setup"
+msgstr "Positioner setup"
+
 msgid "Softcam startup"
 msgstr ""
 
@@ -10633,6 +10793,9 @@ msgid "Sort list:"
 msgstr ""
 
 msgid "Sort order for menu entries"
+msgstr ""
+
+msgid "Sort order for setup entries"
 msgstr ""
 
 msgid "Sort plugins list to default?"
@@ -10756,6 +10919,21 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
+#, fuzzy
+msgid "Start CableScan"
+msgstr "FastScan"
+
+#, fuzzy
+msgid "Start Cablescan"
+msgstr "FastScan"
+
+#, fuzzy
+msgid "Start Fastscan"
+msgstr "FastScan"
+
+msgid "Start Sleeptimer"
+msgstr ""
+
 msgid "Start directory"
 msgstr ""
 
@@ -10799,6 +10977,11 @@ msgstr ""
 msgid "Start/stop slide show"
 msgstr ""
 
+msgid ""
+"Starting download of image file?\n"
+"Press OK to start or Exit to abort."
+msgstr ""
+
 msgid "Starting on"
 msgstr ""
 
@@ -10830,6 +11013,9 @@ msgid "Stop"
 msgstr ""
 
 msgid "Stop PiP"
+msgstr ""
+
+msgid "Stop Sleeptimer"
 msgstr ""
 
 msgid "Stop all current recordings"
@@ -11193,8 +11379,9 @@ msgid "TEXT"
 msgstr ""
 
 #. TRANSLATORS: Add here whatever should be shown in the "translator" about screen, up to 6 lines (use \n for newline)
+#. Don't translate TRANSLATOR_INFO to show '(N/A)'
 msgid "TRANSLATOR_INFO"
-msgstr ""
+msgstr "TRANSLATOR_INFO"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr ""
@@ -11494,9 +11681,6 @@ msgstr "There are at least %d updates available."
 msgid "There are currently no outstanding actions."
 msgstr ""
 
-msgid "There are no items currently available for this screen."
-msgstr ""
-
 msgid "There are no saved playlists to delete!"
 msgstr ""
 
@@ -11606,6 +11790,12 @@ msgid "This option allows you enable smoothing filter to control the dithering p
 msgstr ""
 
 msgid "This option allows you enable the vertical scaler dejagging."
+msgstr ""
+
+msgid "This option allows you to add the softcam setup in the extensions menu."
+msgstr ""
+
+msgid "This option allows you to alphabetically sort setup menu entries."
 msgstr ""
 
 msgid "This option allows you to boost the blue tones in the picture."
@@ -11849,6 +12039,9 @@ msgstr ""
 msgid "Timer overview"
 msgstr ""
 
+msgid "Timer recording failed. No space left on device!\n"
+msgstr ""
+
 msgid "Timer recording location"
 msgstr ""
 
@@ -11919,6 +12112,9 @@ msgid "To subtitle selection"
 msgstr ""
 
 msgid "Today"
+msgstr ""
+
+msgid "Toggle Configuration Mode or AutoDisqc"
 msgstr ""
 
 msgid "Toggle HDMI In"
@@ -12000,6 +12196,9 @@ msgid "Translations"
 msgstr ""
 
 msgid "Translations Info"
+msgstr ""
+
+msgid "Translator comment"
 msgstr ""
 
 msgid "Transmission mode"
@@ -12412,6 +12611,9 @@ msgstr ""
 msgid "Use circular LNB"
 msgstr ""
 
+msgid "Use default spinner"
+msgstr ""
+
 msgid "Use fastscan channel names"
 msgstr ""
 
@@ -12790,9 +12992,6 @@ msgstr ""
 msgid "Wakeup time"
 msgstr ""
 
-msgid "Wakeup timer"
-msgstr ""
-
 msgid "Wakeup type"
 msgstr ""
 
@@ -12919,7 +13118,13 @@ msgstr ""
 msgid "What should happen when you start it for the first time?"
 msgstr ""
 
+msgid "When enabled a simplified version from the second infobar is shown. This can also be toggled instantly by holding the OK buttin when the second infobar is visible. The infobar will shortly disappear and then shown in the other mode."
+msgstr ""
+
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated"
+msgstr ""
+
+msgid "When enabled extra information is shown on the infobar. This can also be toggled instantly by holding the OK button when the inforbar is not visible."
 msgstr ""
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
@@ -13052,6 +13257,9 @@ msgid "When enabled, services may be grouped in multiple bouquets."
 msgstr ""
 
 msgid "When enabled, show channel numbers in the channel selection screen."
+msgstr ""
+
+msgid "When enabled, spinners that come with the activated skin are ignored."
 msgstr ""
 
 msgid "When enabled, subtitles for the hearing impaired can be used."
@@ -13234,6 +13442,9 @@ msgid "Yellow"
 msgstr ""
 
 msgid "Yellow DVB subtitles"
+msgstr ""
+
+msgid "Yellow button function"
 msgstr ""
 
 msgid "Yemen"
@@ -13647,9 +13858,6 @@ msgstr ""
 msgid "about to start"
 msgstr ""
 
-msgid "activate network adapter configuration"
-msgstr ""
-
 msgid "active"
 msgstr ""
 
@@ -13961,9 +14169,6 @@ msgid "execute cuts (requires MovieCut plugin)"
 msgstr ""
 
 msgid "exit DVD player or return to file browser"
-msgstr ""
-
-msgid "exit network adapter configuration"
 msgstr ""
 
 msgid "exit networkadapter setup menu"

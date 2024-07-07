@@ -293,7 +293,7 @@ class FlashImage(Screen):
 			imagesList = getImagelist()
 			currentimageslot = getCurrentImage()
 			choices = []
-			slotdict = {k: v for k, v in BoxInfo.getItem("canMultiBoot").items() if not v['device'].startswith('/dev/sda')}
+			slotdict = {k: v for k, v in BoxInfo.getItem("canMultiBoot").items() if not v['device'].startswith('/dev/sd')}
 			for x in range(1, len(slotdict) + 1):
 				choices.append(((_("slot%s - %s (current image)") if x == currentimageslot else _("slot%s - %s")) % (x, imagesList[x]['imagename']), (x, "with backup") if getImageDistro() in self.imagename else (x, "without backup")))
 			if "://" in self.source:
@@ -361,7 +361,10 @@ class FlashImage(Screen):
 						os.remove(destination)
 					if not os.path.isdir(destination):
 						os.mkdir(destination)
-					self.flashPostAction()
+					if not self.onlyDownload:
+						self.flashPostAction()
+					else:
+						self.session.openWithCallback(self.startDownload, MessageBox, _("Starting download of image file?\nPress OK to start or Exit to abort."), type=MessageBox.TYPE_INFO, timeout=0)
 				except:
 					self.session.openWithCallback(self.abort, MessageBox, _("Unable to create the required directories on the media (e.g. USB stick or Harddisk) - Please verify media and try again!"), type=MessageBox.TYPE_ERROR, simple=True)
 			else:

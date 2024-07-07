@@ -1,3 +1,4 @@
+from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Tools.BoundFunction import boundFunction
@@ -5,7 +6,7 @@ from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
 from Components.ActionMap import NumberActionMap
 from Components.Label import Label
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigSubList, KEY_LEFT, KEY_RIGHT, KEY_0, ConfigNothing, ConfigPIN, ConfigYesNo, NoSave
+from Components.config import config, ConfigSubsection, ConfigSelection, ConfigSubList, KEY_LEFT, KEY_RIGHT, KEY_0, ConfigNothing, ConfigPIN, ConfigYesNo, NoSave, ConfigBoolean
 from Components.ConfigList import ConfigList, ConfigListScreen
 from Components.SystemInfo import BoxInfo
 from enigma import eTimer, eDVBCI_UI
@@ -45,7 +46,8 @@ def InitCiConfig():
 			config.ci[slot].use_static_pin = ConfigYesNo(default=True)
 			config.ci[slot].static_pin = ConfigPIN(default=0)
 			config.ci[slot].show_ci_messages = ConfigYesNo(default=True)
-			config.ci[slot].supress_error10_message = ConfigYesNo(default=False)
+			config.ci[slot].disable_operator_profile = ConfigYesNo(default=False)
+			config.ci[slot].exclude_ca0_device = ConfigYesNo(default=False)
 			if BoxInfo.getItem("CI%dSupportsHighBitrates" % slot):
 				highBitrateChoices = [("normal", _("normal")), ("high", _("high"))]
 				if exists("/proc/stb/tsmux/ci%d_tsclk_choices" % slot):
@@ -331,7 +333,6 @@ class CiMessageHandler:
 		self.auto_close = False
 		self.ci = {}
 		self.dlgs = {}
-		self.err10supressed = False
 		eDVBCI_UI.getInstance().ciStateChanged.get().append(self.ciStateChanged)
 
 	def setSession(self, session):
@@ -350,11 +351,6 @@ class CiMessageHandler:
 					if config.ci[slot].show_ci_messages.value:
 						show_ui = True
 					screen_data = handler.getMMIScreen(slot)
-					if handler.isError10(slot) and config.ci[slot].supress_error10_message.value:
-						if not self.err10supressed:
-							self.err10supressed = True
-							handler.answerMenu(slot, 0)
-						show_ui = False
 					if config.ci[slot].use_static_pin.value:
 						if screen_data is not None and len(screen_data):
 							ci_tag = screen_data[0][0]
@@ -398,13 +394,14 @@ CiHandler = CiMessageHandler()
 class CiSelection(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.setTitle(_("Common Interface"))
-		self["actions"] = ActionMap(["OkCancelActions", "CiSelectionActions"],
+		self.setTitle(_("Setup"))
+		self["actions"] = ActionMap(["OkCancelActions", "CiSelectionActions", "ColorActions"],
 			{
 				"left": self.keyLeft,
-				"right": self.keyLeft,
+				"right": self.keyRight,
 				"ok": self.okbuttonClick,
-				"cancel": self.cancel
+				"cancel": self.cancel,
+				"red": self.cancel
 			}, -1)
 
 		self.dlg = None
@@ -424,6 +421,7 @@ class CiSelection(Screen):
 		self["entries"] = menuList
 		self["entries"].onSelectionChanged.append(self.selectionChanged)
 		self["text"] = Label("")
+		self["key_red"] = StaticText(_("Exit"))
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def layoutFinished(self):
@@ -475,8 +473,9 @@ class CiSelection(Screen):
 		self.list.append((_("Enter persistent PIN code"), ConfigNothing(), 5, slot))
 		self.list.append((_("Reset persistent PIN code"), ConfigNothing(), 6, slot))
 		self.list.append((_("Show CI messages"), config.ci[slot].show_ci_messages, 3, slot))
-		self.list.append((_("Hide and confirm invalid key message"), config.ci[slot].supress_error10_message, 3, slot))
+		self.list.append((_("Disable operator profiles"), config.ci[slot].disable_operator_profile, 3, slot))
 		self.list.append((_("Multiple service support"), config.ci[slot].canDescrambleMultipleServices, 3, slot))
+		self.list.append((_("Exclude first CA device"), config.ci[slot].exclude_ca0_device, 3, slot))
 		if BoxInfo.getItem("CI%dSupportsHighBitrates" % slot):
 			self.list.append((_("High bitrate support"), config.ci[slot].highBitrate, 3, slot))
 		if BoxInfo.getItem("CI%dRelevantPidsRoutingSupport" % slot):
@@ -514,8 +513,12 @@ class CiSelection(Screen):
 		if cur and len(cur) > 2:
 			action = cur[2]
 			slot = cur[3]
-			if action == 3:
-				pass
+			if action < 0 or action == 3:
+				if isinstance(cur[1], ConfigBoolean):
+					self.keyRight()
+				elif isinstance(cur[1], ConfigSelection):
+					pass
+					self.keySelection()
 			elif action == 0: #reset
 				eDVBCI_UI.getInstance().setReset(slot)
 				authFile = "/etc/ciplus/ci_auth_slot_%d.bin" % slot
@@ -531,6 +534,20 @@ class CiSelection(Screen):
 				self.session.openWithCallback(self.cancelCB, MessageBox, _("The saved PIN was cleared."), MessageBox.TYPE_INFO)
 			elif action == 2 and self.state[slot] == 2:
 				self.dlg = self.session.openWithCallback(self.dlgClosed, MMIDialog, slot, action)
+
+	def keySelection(self):
+		currConfig = self["entries"].getCurrent()
+		if currConfig and len(currConfig[1].choices.choices) > 1:
+			self.session.openWithCallback(
+				self.keySelectionCallback, ChoiceBox, title=currConfig[0],
+				list=list(zip(currConfig[1].description, currConfig[1].choices)),
+				selection=currConfig[1].getIndex(),
+				keys=[]
+			)
+
+	def keySelectionCallback(self, answer):
+		if answer:
+			self["entries"].getCurrent()[1].value = answer[1]
 
 	def cancelCB(self, value):
 		pass
@@ -559,17 +576,7 @@ class PermanentPinEntry(ConfigListScreen, Screen):
 		self.pin2.addEndNotifier(boundFunction(self.valueChanged, 2))
 		self.list.append((_("Enter PIN"), NoSave(self.pin1)))
 		self.list.append((_("Reenter PIN"), NoSave(self.pin2)))
-		ConfigListScreen.__init__(self, self.list)
-
-		self["actions"] = NumberActionMap(["DirectionActions", "ColorActions", "OkCancelActions"],
-		{
-			"cancel": self.cancel,
-			"red": self.cancel,
-			"save": self.keyOK,
-		}, -1)
-
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("OK"))
+		ConfigListScreen.__init__(self, self.list, fullUI=True)
 
 	def valueChanged(self, pin, value):
 		if pin == 1:
@@ -577,7 +584,7 @@ class PermanentPinEntry(ConfigListScreen, Screen):
 		elif pin == 2:
 			self.keyOK()
 
-	def keyOK(self):
+	def keySave(self):
 		if self.pin1.value == self.pin2.value:
 			self.pin.value = self.pin1.value
 			self.pin.save()
@@ -585,5 +592,5 @@ class PermanentPinEntry(ConfigListScreen, Screen):
 		else:
 			self.session.open(MessageBox, _("The PIN codes you entered are different."), MessageBox.TYPE_ERROR)
 
-	def cancel(self):
+	def keyCancel(self):
 		self.close(None)
