@@ -4,7 +4,6 @@ from Components.ChoiceList import ChoiceList, ChoiceEntryComponent
 from Components.SystemInfo import BoxInfo
 from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
 from Components.PluginComponent import plugins
-from Screens.Console import Console
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -30,19 +29,18 @@ class hotkey:
 	functions = None
 	hotkeys = [(_("Red") + " " + _("long"), "red_long", ""),
 		(_("Green") + " " + _("long"), "green_long", ""),
-		(_("Yellow") + " " + _("long"), "yellow_long", ""),
-		#(_("Blue") + " " + _("long"), "blue_long", "Plugins/PLi/SoftcamSetup/1"),
-		(_("Blue") + " " + _("long"), "blue_long", ""),
+		(_("Yellow") + " " + _("long"), "yellow_long", "Plugins/Extensions/GraphMultiEPG/1"),
+		(_("Blue") + " " + _("long"), "blue_long", "SoftcamSetup"),
 		("F1/LAN", "f1", ""),
 		("F1" + " " + _("long"), "f1_long", ""),
-		("F2", "f2", "Infobar/showPiP"),
+		("F2", "f2", ""),
 		("F2" + " " + _("long"), "f2_long", ""),
 		("F3", "f3", ""),
 		("F3" + " " + _("long"), "f3_long", ""),
 		("F4", "f4", ""),
 		("F4" + " " + _("long"), "f4_long", ""),
 		(_("Red"), "red", ""),
-		(_("Green"), "green", "Module/Screens.PluginBrowser/PluginBrowser"),
+		(_("Green"), "green", ""),
 		(_("Yellow"), "yellow", ""),
 		(_("Blue"), "blue", ""),
 		("Rec", "rec", ""),
@@ -51,6 +49,8 @@ class hotkey:
 		("Radio" + " " + _("long"), "radio_long", ""),
 		("TV", "showTv", ""),
 		("TV" + " " + _("long"), "showTv_long", BoxInfo.getItem("LcdLiveTV") and "Infobar/ToggleLCDLiveTV" or ""),
+		("TV2", "toggleTvRadio", ""),
+		("TV2" + " " + _("long"), "toggleTvRadio_long", BoxInfo.getItem("LcdLiveTV") and "Infobar/ToggleLCDLiveTV" or ""),
 		("Teletext", "text", ""),
 		("Help", "displayHelp", ""),
 		("Help" + " " + _("long"), "displayHelp_long", ""),
@@ -58,7 +58,7 @@ class hotkey:
 		("Subtitle" + " " + _("long"), "subtitle_long", ""),
 		("Menu", "mainMenu", ""),
 		("Info (EPG)", "info", "Infobar/openEventView"),
-		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/openSingleServiceEPG"),
+		("Info (EPG)" + " " + _("long"), "info_long", "Infobar/showEventInfoPlugins"),
 		("List/Fav/PVR", "list", ""),
 		("List/Fav/PVR" + " " + _("long"), "list_long", "Plugins/Extensions/Kodi/1"),
 		("Back/Recall", "back", ""),
@@ -102,8 +102,6 @@ class hotkey:
 		("Sleep" + " " + _("long"), "sleep_long", ""),
 		("Context", "contextmenu", ""),
 		("Context" + " " + _("long"), "contextmenu_long", ""),
-		("Video", "video", ""),
-		("Video" + " " + _("long"), "video_long", ""),
 		("Video Mode", "vmode", ""),
 		("Video Mode" + " " + _("long"), "vmode_long", ""),
 		("Mode", "mode", ""),
@@ -183,6 +181,7 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("Show Audioselection"), "Infobar/audioSelection", "InfoBar"))
 	hotkey.functions.append((_("Switch to radio mode"), "Infobar/showRadio", "InfoBar"))
 	hotkey.functions.append((_("Switch to TV mode"), "Infobar/showTv", "InfoBar"))
+	hotkey.functions.append((_("Toggle TV/RADIO mode"), "Infobar/toggleTvRadio", "InfoBar"))
 	hotkey.functions.append((_("Instant recording"), "Infobar/instantRecord", "InfoBar"))
 	hotkey.functions.append((_("Start instant recording"), "Infobar/startInstantRecording", "InfoBar"))
 	hotkey.functions.append((_("Start recording current event"), "Infobar/startRecordingCurrentEvent", "InfoBar"))
@@ -213,9 +212,11 @@ def getHotkeyFunctions():
 	if BoxInfo.getItem("HasHDMI-CEC"):
 		hotkey.functions.append((_("HDMI-CEC Source Active"), "Infobar/SourceActiveHdmiCec", "InfoBar"))
 		hotkey.functions.append((_("HDMI-CEC Source Inactive"), "Infobar/SourceInactiveHdmiCec", "InfoBar"))
+	if BoxInfo.getItem("HasSoftcamInstalled"):
+		hotkey.functions.append((_("Softcam Setup"), "SoftcamSetup", "Setup"))
 	hotkey.functions.append((_("HotKey Setup"), "Module/Screens.Hotkey/HotkeySetup", "Setup"))
-	#hotkey.functions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
-	#hhotkey.functions.append((_("Latest Commits"), "Module/Screens.About/CommitInfo", "Setup"))
+	hotkey.functions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
+	hotkey.functions.append((_("Latest Commits"), "Module/Screens.About/CommitInfo", "Setup"))
 	hotkey.functions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
 	hotkey.functions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
 	hotkey.functions.append((_("Manual Scan"), "Module/Screens.ScanSetup/ScanSetup", "Scanning"))
@@ -230,6 +231,13 @@ def getHotkeyFunctions():
 	for plugin in plugins.getPluginsForMenu("system"):
 		if plugin[2]:
 			hotkey.functions.append((plugin[0], "MenuPlugin/system/" + plugin[2], "Setup"))
+	for plugin in plugins.getPluginsForMenu("video"):
+		if plugin[2]:
+			hotkey.functions.append((plugin[0], "MenuPlugin/video/" + plugin[2], "Setup"))
+	for plugin in plugins.getPluginsForMenu("gui"):
+		if plugin[2]:
+			hotkey.functions.append((plugin[0], "MenuPlugin/gui/" + plugin[2], "Setup"))
+	hotkey.functions.append((_("Skin Selection"), "Module/Screens.SkinSelector/SkinSelector", "Setup"))
 	hotkey.functions.append((_("PowerMenu"), "Menu/shutdown", "Power"))
 	hotkey.functions.append((_("Standby"), "Module/Screens.Standby/Standby", "Power"))
 	hotkey.functions.append((_("Restart"), "Module/Screens.Standby/TryQuitMainloop/2", "Power"))
@@ -742,9 +750,12 @@ class InfoBarHotkey:
 					exec("from %s import %s" % (selected[1], selected[2]))
 					exec("self.session.open(%s)" % ",".join(selected[2:]))
 				except Exception as e:
-					print("[Hotkey] error during executing module %s, screen %s" % (selected[1], selected[2]))
+					print("[Hotkey] error during executing module %s, screen %s, %s" % (selected[1], selected[2], e))
 					import traceback
 					traceback.print_exc()
+			elif selected[0] == "SoftcamSetup" and BoxInfo.getItem("HasSoftcamInstalled"):
+				from Screens.SoftcamSetup import SoftcamSetup
+				self.session.open(SoftcamSetup)
 			elif selected[0] == "Setup":
 				from Screens.Setup import Setup
 				exec("self.session.open(Setup, \"%s\")" % selected[1])
