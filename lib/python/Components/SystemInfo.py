@@ -2,7 +2,7 @@
 from ast import literal_eval
 from hashlib import md5
 from os import R_OK, access
-from os.path import exists as fileAccess, isdir, isfile, join
+from os.path import exists as fileAccess, isdir, isfile, join as pathjoin
 from re import findall
 
 from enigma import Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl
@@ -17,7 +17,7 @@ class BoxInformation:  # To maintain data integrity class variables should not b
 		self.boxInfo = {}
 		self.enigmaInfoList = []
 		self.enigmaConfList = []
-		lines = fileReadLines(join(resolveFilename(SCOPE_LIBDIR), "enigma.info"), source=MODULE_NAME)
+		lines = fileReadLines(pathjoin(resolveFilename(SCOPE_LIBDIR), "enigma.info"), source=MODULE_NAME)
 		if lines:
 			modified = self.checkChecksum(lines)
 			if modified:
@@ -46,7 +46,7 @@ class BoxInformation:  # To maintain data integrity class variables should not b
 			print("[SystemInfo] ERROR: Enigma information file is not available!  The system is unlikely to boot or operate correctly.")
 		filename = isfile(resolveFilename(SCOPE_LIBDIR, "enigma.conf"))
 		if filename:
-			lines = fileReadLines(join(resolveFilename(SCOPE_LIBDIR), "enigma.conf"), source=MODULE_NAME)
+			lines = fileReadLines(pathjoin(resolveFilename(SCOPE_LIBDIR), "enigma.conf"), source=MODULE_NAME)
 			print("[SystemInfo] Enigma config override file available and data loaded into BoxInfo.")
 			self.boxInfo["overrideactive"] = True
 			for line in lines:
@@ -185,9 +185,9 @@ def getBootdevice():
 
 
 def getRCFile(ext):
-	filename = resolveFilename(SCOPE_SKIN, join("rc_models", f"{BoxInfo.getItem('rcname')}.{ext}"))
+	filename = resolveFilename(SCOPE_SKIN, pathjoin("rc_models", "%s.%s" % (BoxInfo.getItem("rcname"), ext)))
 	if not isfile(filename):
-		filename = resolveFilename(SCOPE_SKIN, join("rc_models", f"dmm1.{ext}"))
+		filename = resolveFilename(SCOPE_SKIN, pathjoin("rc_models", "dmm1.%s" % ext))
 	return filename
 
 

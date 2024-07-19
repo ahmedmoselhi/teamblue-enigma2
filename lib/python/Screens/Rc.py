@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Components.Pixmap import MovingPixmap, MultiPixmap
 from Tools.Directories import resolveFilename, SCOPE_SKIN
 from xml.etree.ElementTree import ElementTree
@@ -38,7 +39,7 @@ class Rc:
 		if self.isDefaultRc:
 			target = resolveFilename(SCOPE_SKIN, "rcpositions.xml")
 		else:
-			target = rc_model.getRcLocation() + 'rcpositions.xml'
+			target = rc_model.getRcPositions()
 		tree = ElementTree(file=target)
 		rcs = tree.getroot()
 		self.rcs = {}
