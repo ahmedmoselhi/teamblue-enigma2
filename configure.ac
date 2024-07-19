@@ -568,6 +568,7 @@ data/extensions/Makefile
 data/gbipbox/Makefile
 data/hw_info/Makefile
 data/keymaps/Makefile
+data/rc_models/Makefile
 data/skin_default/Makefile
 data/skin_default/menu/Makefile
 data/skin_default/icons/Makefile
