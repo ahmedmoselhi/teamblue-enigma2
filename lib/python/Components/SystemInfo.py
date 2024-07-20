@@ -259,10 +259,17 @@ BoxInfo.setItem("DebugLevel", eGetEnigmaDebugLvl())
 BoxInfo.setItem("InDebugMode", eGetEnigmaDebugLvl() >= 4)
 BoxInfo.setItem("ModuleLayout", getModuleLayout())
 
+from Tools.Multiboot import getMultibootStartupDevice, getMultibootslots  # This import needs to be here to avoid a SystemInfo load loop!
+BoxInfo.setItem("HasRootSubdir", False)	# This needs to be here so it can be reset by getMultibootslots!
+BoxInfo.setItem("RecoveryMode", False or fileCheck("/proc/stb/fp/boot_mode"))	# This needs to be here so it can be reset by getMultibootslots!
+BoxInfo.setItem("MultibootStartupDevice", getMultibootStartupDevice())
+
 BoxInfo.setItem("BoxName", getBoxName())
 BoxInfo.setItem("RCImage", getRCFile("png"))
 BoxInfo.setItem("RCMapping", getRCFile("xml"))
 
+BoxInfo.setItem("hasKexec", fileHas("/proc/cmdline", "kexec=1"))
+BoxInfo.setItem("canKexec", not BoxInfo.getItem("hasKexec") and fileExists("/usr/bin/kernel_auto.bin") and fileExists("/usr/bin/STARTUP.cpio.gz") and (model in ("vuduo4k", "vuduo4kse") and ["mmcblk0p9", "mmcblk0p6"] or model in ("vusolo4k", "vuultimo4k", "vuuno4k", "vuuno4kse") and ["mmcblk0p4", "mmcblk0p1"] or model == "vuzero4k" and ["mmcblk0p7", "mmcblk0p4"]))
 BoxInfo.setItem("HasKexecMultiboot", fileHas("/proc/cmdline", "kexec=1"))
 BoxInfo.setItem("cankexec", BoxInfo.getItem("kexecmb") and fileExists("/usr/bin/kernel_auto.bin") and fileExists("/usr/bin/STARTUP.cpio.gz") and not BoxInfo.getItem("HasKexecMultiboot"))
 BoxInfo.setItem("HasSoftcamInstalled", hassoftcaminstalled())
@@ -351,6 +358,8 @@ BoxInfo.setItem("HasComposite", MODEL not in ("i55", "gbquad4k", "gbue4k", "hd15
 BoxInfo.setItem("hasXcoreVFD", MODEL in ("osmega", "spycat4k", "spycat4kmini", "spycat4kcombo") and fileCheck("/sys/module/brcmstb_%s/parameters/pt6302_cgram" % MODEL))
 BoxInfo.setItem("HasOfflineDecoding", MODEL not in ("osmini", "osminiplus", "et7000mini", "et11000", "mbmicro", "mbtwinplus", "mbmicrov2", "et7000", "et8500"))
 BoxInfo.setItem("canMode12", "%s_4.boxmode" % MODEL in cmdline and cmdline["%s_4.boxmode" % MODEL] in ("1", "12") and "192M")
+BoxInfo.setItem("canMultiBoot", getMultibootslots())
+BoxInfo.setItem("HasMMC", "root" in cmdline and cmdline["root"].startswith("/dev/mmcblk") or BoxInfo.getItem("canMultiBoot") and fileHas("/proc/cmdline", "root=/dev/sda"))
 BoxInfo.setItem("canDualBoot", fileExists("/dev/block/by-name/flag"))
 BoxInfo.setItem("canFlashWithOfgwrite", not (MODEL.startswith("dm")))
 BoxInfo.setItem("HDRSupport", fileExists("/proc/stb/hdmi/hlg_support_choices") and fileCheck("/proc/stb/hdmi/hlg_support"))

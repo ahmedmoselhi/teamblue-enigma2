@@ -6,6 +6,7 @@ import glob
 import tempfile
 import subprocess
 
+
 class tmp:
 	dir = None
 
@@ -38,17 +39,15 @@ def getMultibootslots():
 	bootslots = {}
 	mode12found = False
 	if BoxInfo.getItem("MultibootStartupDevice"):
-		for _file in glob.glob(os.path.join(tmp.dir, 'STARTUP_*')):
-			if "STARTUP_RECOVERY" in _file:
-				BoxInfo.setItem("RecoveryMode", True)
-			if 'MODE_' in _file:
+		for file in glob.glob(os.path.join(tmp.dir, 'STARTUP_*')):
+			if 'MODE_' in file:
 				mode12found = True
-				slotnumber = _file.rsplit('_', 3)[1]
+				slotnumber = file.rsplit('_', 3)[1]
 			else:
-				slotnumber = _file.rsplit('_', 1)[1]
+				slotnumber = file.rsplit('_', 1)[1]
 			if slotnumber.isdigit() and slotnumber not in bootslots:
 				slot = {}
-				for line in open(_file).readlines():
+				for line in open(file).readlines():
 					if 'root=' in line:
 						device = getparam(line, 'root')
 						if "UUID=" in device:
@@ -57,16 +56,9 @@ def getMultibootslots():
 								device = slotx
 						if os.path.exists(device) or device == 'ubi0:ubifs':
 							slot['device'] = device
-							slot['startupfile'] = os.path.basename(_file)
-							if "sda" in line:
-								slot["kernel"] = "/dev/sda%s" % line.split("sda", 1)[1].split(" ", 1)[0]
-								slot["rootsubdir"] = None
-							else:
-								slot["kernel"] = "%sp%s" % (device.split("p")[0], int(device.split("p")[1]) - 1)
+							slot['startupfile'] = os.path.basename(file)
 							if 'rootsubdir' in line:
-								BoxInfo.setItem("HasRootSubdir", True)
 								slot['rootsubdir'] = getparam(line, 'rootsubdir')
-								slot["kernel"] = getparam(line, "kernel")
 						break
 				if slot:
 					bootslots[int(slotnumber)] = slot
@@ -124,6 +116,7 @@ def restoreImages():
 		if not os.path.ismount(tmp.dir):
 			os.rmdir(tmp.dir)
 
+
 def getUUIDtoSD(UUID): # returns None on failure
 	check = "/sbin/blkid"
 	if fileExists(check):
@@ -154,16 +147,10 @@ def getImagelist():
 					date = max(date, datetime.fromtimestamp(os.stat(os.path.join(imagedir, "usr/bin/enigma2")).st_mtime).strftime('%Y-%m-%d'))
 				except:
 					date = _("Unknown")
-				imagelist[slot] = {'imagename': "%s (%s)" % (open(os.path.join(imagedir, "etc/issue")).readlines()[-2].capitalize().strip()[:-6], date)}
-				if os.path.exists(os.path.join(imagedir, "etc/image-version")):
-					with open(os.path.join(imagedir, "etc/image-version"), 'r') as fp:
-						lines = fp.readlines()
-						for row in lines:
-							word = 'imagetype'
-							if row.find(word) != -1:
-								imagetype=row.split('=')[1]
-								imagelist[slot] = {'imagename': "%s - %s (%s)" % (open(os.path.join(imagedir, "etc/issue")).readlines()[-2].capitalize().strip()[:-6], imagetype.strip(), date)}
-								break
+				try:
+					imagelist[slot] = {'imagename': "%s (%s)" % (open(os.path.join(imagedir, "etc/issue")).readlines()[0].capitalize().strip()[:-6], date)}
+				except IndexError:
+					imagelist[slot] = {'imagename': _("Unknown image")}
 			elif os.path.isfile(os.path.join(imagedir, 'usr/bin/enigma2.bak')):
 				imagelist[slot] = {'imagename': _("Deleted image")}
 			else:
