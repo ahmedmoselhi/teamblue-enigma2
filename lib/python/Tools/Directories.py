@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import errno
 import os
-
+from inspect import stack
 from enigma import eEnv, getDesktop, eGetEnigmaDebugLvl
 from errno import ENOENT, EXDEV
 from re import compile, split
